@@ -1,91 +1,128 @@
-# 🧠 genai-research-assistant
-
-An AI-powered assistant that intelligently summarizes, queries, and quizzes research documents (PDF/TXT) with contextual understanding using Gemini AI and LangChain.
+# 🧠 Task: Smart Assistant for Research Summarization
 
 ---
 
-## 🚀 Overview
+## 🎯 Objective
 
-The `genai-research-assistant` enables users to:
-
-- 📄 Upload structured research or technical documents
-- 🧠 Receive an automatic summary (≤150 words)
-- 💬 Ask comprehension-based questions
-- 🎯 Be challenged with logic-based questions
-- 📌 Get grounded answers with in-document references
-
-Designed with clean UX, minimal hallucination, and robust reasoning.
+Build an AI-powered assistant that can read and deeply understand user-uploaded documents (PDF or TXT). The assistant should support both free-form question answering and logical reasoning, ensuring all answers are grounded in the source content.
 
 ---
 
-## 🛠 Features
+## 📚 Problem Statement
 
-- 📄 **Document Upload** – Accepts PDF or TXT files (≤10MB)
-- 🧠 **Auto Summarization** – LLM-powered summary on upload
-- 💬 **Ask Anything** – Free-form contextual Q&A grounded in the text
-- 🎯 **Challenge Me** – Logic/inference-based MCQs with evaluation
-- 📌 **Answer Justification** – Cites exact section/snippet from the document
-- 🔁 **Memory Handling** *(Bonus)* – Follow-up question awareness
-- ✨ **Answer Highlighting** *(Bonus)* – Visual snippet display
+Reading lengthy documents such as research papers or technical manuals is time-consuming. Simple summarizers or keyword search tools lack comprehension. This tool bridges that gap by enabling users to:
+
+- Ask intelligent questions requiring inference
+- Receive contextual answers with source justification
+- Be tested with logic-based questions auto-generated from the document
 
 ---
 
-## 🧱 System Design
+## ✅ Functional Requirements
+
+### 1. 📄 Document Upload
+- Accepts `.pdf` and `.txt` files
+- Assumes input is structured English (e.g., reports, research papers)
+
+### 2. 💬 Interaction Modes
+
+#### a. Ask Anything
+- Free-form user questions
+- Assistant answers using contextual evidence from the document
+
+#### b. Challenge Me
+- Generates 3 logic/inference-based questions
+- Accepts user answers
+- Evaluates and provides feedback + justification
+
+### 3. 📌 Contextual Understanding
+- All responses are grounded in uploaded content
+- No hallucination or fabricated responses
+- Each answer includes reference (e.g., “Supported by paragraph 3 of section 1”)
+
+### 4. 🧠 Auto Summary (≤150 words)
+- After upload, a concise summary of the document is generated instantly
+
+### 5. 🌐 Application Architecture
+- Web-based interface running locally
+- Frontend: Streamlit
+- Backend: FastAPI
+- Focus on seamless UX and smooth flow
+
+---
+
+## ✨ Bonus Features (Implemented)
+
+- 🔁 Memory Handling – Supports follow-up questions with context awareness
+- 🔍 Answer Highlighting – Shows source snippet backing each answer
+
+---
+
+## 🧱 Architecture / Reasoning Flow
 
 ```mermaid
 graph TD
-A[📄 User Uploads Document] --> B[📑 Document Processor]
-B --> C[🧹 Cleaner + Text Chunker]
-C --> D[📊 FAISS Vector Index]
-C --> E[🧠 LLM Summary Generator]
-D --> F{Interaction Mode}
-F -->|💬 Ask Anything| G[LLM + Context Retriever → Answer + Reference]
-F -->|🎯 Challenge Me| H[Question Generator → User Answer → Evaluator]
-Embeddings are created from text chunks
+    A[📄 Upload PDF/TXT] --> B[Text Extractor]
+    B --> C[Text Cleaning + Chunking]
+    C --> D[Vector Index (FAISS)]
+    C --> E[Auto Summary Generator (LLM)]
+    D --> F{User Mode}
+    F -->|Ask Anything| G[Retriever → LLM → Answer + Justification]
+    F -->|Challenge Me| H[Question Generator → Answer Evaluation → Feedback]
+```
 
-Chunks are queried for relevance via semantic search
+- Uses Retriever-Augmented Generation (RAG)
+- Top-k relevant chunks passed to the model to reduce hallucinations
 
-Only top-k chunks are passed to the LLM to minimize hallucination
+---
 
-📦 Tech Stack
-Layer	Technology
-UI	Streamlit
-Backend	FastAPI
-LLM	Gemini API / GPT-4
-Chunking	LangChain
-Vector Search	FAISS or ChromaDB
-PDF Parsing	PyMuPDF
-Evaluation	LLM-based scoring
+## 🛠 Tech Stack
 
-🧪 Getting Started
-1️⃣ Clone the Repository
-bash
-Copy
-Edit
+| Layer         | Technology         |
+|---------------|--------------------|
+| UI            | Streamlit          |
+| Backend       | FastAPI            |
+| LLM           | Gemini API / GPT-4 |
+| Chunking      | LangChain          |
+| Vector Search | FAISS / ChromaDB   |
+| Parsing       | PyMuPDF            |
+| Memory        | LangChain Memory   |
+
+---
+
+## 🧪 Getting Started
+
+### 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/ManavRastogi03/genai-research-assistant.git
 cd genai-research-assistant
-2️⃣ Create & Activate Virtual Environment
-bash
-Copy
-Edit
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-3️⃣ Install Dependencies
-bash
-Copy
-Edit
-pip install -r requirements.txt
-4️⃣ Add API Key
-Create a .env file in the root directory:
+```
 
-env
-Copy
-Edit
+### 2️⃣ Create a Virtual Environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+```
+
+### 3️⃣ Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ Add Your API Key
+
+Create a `.env` file:
+
+```env
 GEMINI_API_KEY=your_gemini_api_key_here
-5️⃣ Run the App
-bash
-Copy
-Edit
+```
+
+### 5️⃣ Run the App
+
+```bash
 # Start backend
 cd backend
 uvicorn main:app --reload
@@ -93,12 +130,13 @@ uvicorn main:app --reload
 # Start frontend
 cd ../fronted
 streamlit run app.py
-Then open: http://localhost:8501
+```
 
-📁 Folder Layout
-arduino
-Copy
-Edit
+---
+
+## 📁 Project Structure
+
+```
 genai-research-assistant/
 ├── backend/
 │   ├── main.py
@@ -124,26 +162,36 @@ genai-research-assistant/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
-🎓 Example Use Case
-Upload a PDF research paper.
+```
 
-Read the summary instantly.
+---
 
-Ask: "What were the key findings in section 2?"
+## 🎓 Example Use Case
 
-Receive a grounded answer with citation like:
-“As per paragraph 2 of Section 2...”
+- Upload a PDF research paper.
+- Read the auto-generated summary.
+- Ask: **"What were the challenges discussed in section 2?"**
+- Get a cited answer like:  
+  _“As per paragraph 2 of Section 2...”_
+- Try the “Challenge Me” quiz to test your understanding.
 
-Use "Challenge Me" mode to test your comprehension.
+---
 
-✅ Evaluation Checklist
-Criteria	Weight
-📖 Response Accuracy & Justification	30%
-🧠 Challenge Me Evaluation Logic	20%
-🎨 UI/UX Flow & Simplicity	15%
-🧹 Code Quality & Documentation	15%
-🌟 Creative / Bonus Features	10%
-🚫 Low Hallucination & Context Use	10%
+## 📊 Evaluation Criteria
 
-📜 License
-MIT © ManavRastogi03
+| Category                            | Weight |
+|-------------------------------------|--------|
+| ✅ Response Quality + Justification  | 30%    |
+| 🧠 Challenge Me Functionality        | 20%    |
+| 🎨 UI/UX & Smooth Flow               | 15%    |
+| 🧹 Code Structure & Documentation    | 15%    |
+| 🌟 Creativity / Bonus Features       | 10%    |
+| 🚫 Minimal Hallucination / Context   | 10%    |
+
+---
+
+---
+
+## 📜 License
+
+MIT © [ManavRastogi03](https://github.com/ManavRastogi03)
