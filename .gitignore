@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+.env.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Streamlit-specific
+.streamlit/config.toml
+
+# FAISS index files (optional if persisted)
+*.faiss
+*.pkl
+*.npy
+
+# VSCode or JetBrains
+.vscode/
+.idea/
+
+# Test coverage
+htmlcov/
+.coverage
+.tox/
+.noseids
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
